@@ -187,7 +187,7 @@ async function save(form: any) {
     return
   }
 
-  store.item.amount = parseFloat(String(store.item.amount).replace(',', '.'))
+  store.item.amount = eval(String(store.item.amount).replace(",", '.').replace(" ", ''))
 
   await store.save()
 

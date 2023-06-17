@@ -7,14 +7,17 @@
           <v-icon>mdi-account</v-icon>Perfil
         </v-card-title>
         <v-card-text>
-          <v-text-field label="Name*" :rules="[required]" v-model="user.name" required />
-          <v-text-field label="Email*" :rules="[required]" v-model="user.email" readonly />
+          <v-text-field label="Name*" :rules="[required]" v-model="store.item.name" required />
+          <v-text-field label="Email*" :rules="[required]" v-model="store.item.email" readonly />
 
           <v-divider></v-divider>
 
           <h3 class="my-4 mb-6"> Change Password</h3>
-          <v-text-field label="Password" v-model="user.password" type="password" />
-          <v-text-field label="Password Confirmation" type="password" v-model="user.passwordConfirmation" />
+          <v-text-field autocomplete="off" label="Old Password" v-model="store.item.oldPassword" type="password"
+            clearable />
+          <v-text-field autocomplete="off" label="New Password" type="password" v-model="store.item.password" clearable />
+          <v-text-field autocomplete="off" label="Password Confirmartion" v-model="store.item.passwordConfirmation"
+            type="password" clearable />
 
         </v-card-text>
 
@@ -35,25 +38,28 @@
 import { ref } from 'vue';
 import { useUserStore } from "../store/user";
 
-
-const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : {};
-
 const form = ref(false)
 const loading = ref(false)
 
 const store = useUserStore();
 
+store.item = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : {};
+
 async function save() {
-  console.log(user)
 
   if (!form.value) {
     return
   }
+
+  if (store.item.password && store.item.password !== store.item.passwordConfirmation) {
+    alert("The Password not match with confirmation")
+  }
+
+
   loading.value = true
 
-  store.item = user
-
   await store.save()
+  localStorage.setItem('user', JSON.stringify({ email: store.item.email, name: store.item.name, id: store.item.id }))
 
   loading.value = false
 
@@ -64,8 +70,6 @@ async function save() {
 function required(v: any) {
   return !!v || 'Field is required'
 }
-
-
 </script>
 
 

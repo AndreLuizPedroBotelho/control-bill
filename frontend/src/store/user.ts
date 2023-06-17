@@ -30,7 +30,10 @@ export const useUserStore = defineStore("user", {
     item: {
       id: null,
       name: '',
-      email: ''
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+      oldPassword: ''
     }
   }),
   getters: {
@@ -78,11 +81,9 @@ export const useUserStore = defineStore("user", {
         this.loading = true
 
         if (this.item.id) {
-          const { name } = this.item
+          const items = Object.fromEntries(Object.entries(this.item).filter(([_, v]) => v != null));
 
-          await axios.put(`http://localhost:3333/api/user/${this.item.id}`, {
-            name
-          }, {
+          await axios.put(`http://localhost:3333/api/user/${this.item.id}`, items, {
             headers: {
               Authorization: token
             }

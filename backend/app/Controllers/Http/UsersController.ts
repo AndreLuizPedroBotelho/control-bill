@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import UserValidator from 'App/Validators/UserValidator'
 import User from '../../Models/User'
+import UserChangeValidator from 'App/Validators/UserChangeValidator'
 
 export default class UsersController {
   public async index({ response, request }: HttpContextContract) {
@@ -33,8 +34,8 @@ export default class UsersController {
     response.status(201).json({ user })
   }
 
-  public async update({ response, request }: HttpContextContract) {
-    const payload = await request.validate(UserValidator)
+  public async update({ response, request, auth }: HttpContextContract) {
+    const payload = await request.validate(UserChangeValidator)
     const { id } = request.params()
     const user = await User.find(id)
 
@@ -42,10 +43,10 @@ export default class UsersController {
       throw new Error('User not found')
     }
 
-    if (payload.newPassword) {
-      payload.password = payload.newPassword
 
-      delete payload.newPassword
+    if (payload.password) {
+      await auth.use('api').attempt(user.email, payload.oldPassword)
+      delete payload.oldPassword
     }
 
     await user.merge(payload).save()
@@ -64,4 +65,7 @@ export default class UsersController {
 
     response.status(204)
   }
+
+
+
 }

@@ -13,7 +13,7 @@ export default class BillsController {
         query.whereLike('name', `%${search}%`)
       })
       .preload('typePayment')
-
+      .orderBy('name')
       .paginate(page || 1)
 
     response.status(200).json(data.serialize())
@@ -40,7 +40,6 @@ export default class BillsController {
     const payload = await request.validate(BillValidator)
     const { id } = request.params()
     const bill = await Bill.find(id)
-
     if (!bill) {
       throw new Error('Bill not found')
     }

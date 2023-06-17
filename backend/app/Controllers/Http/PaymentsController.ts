@@ -74,7 +74,6 @@ export default class PaymentsController {
 
     payload.month = payload.month || payment.month || DateTime.local().month
     payload.year = payload.year || payment.year || DateTime.local().year
-    console.log(payload.paid)
 
     await payment.merge(payload).save()
 

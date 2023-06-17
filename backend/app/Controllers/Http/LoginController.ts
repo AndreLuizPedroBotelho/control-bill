@@ -16,5 +16,4 @@ export default class LoginController {
     response.status(200).json({ token, user })
   }
 
-  public async reset({ response }: HttpContextContract) { }
 }

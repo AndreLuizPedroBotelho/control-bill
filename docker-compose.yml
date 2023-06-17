@@ -3,6 +3,7 @@ version: '3.8'
 services:
   postgres:
     container_name: postgres
+    restart: always
     image: postgres:13
     volumes:
       - postgres_volume:/var/lib/postgresql/data
@@ -12,8 +13,11 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - 5432:5432
+
   pgadmin-compose:
+    container_name: pdadmin
     image: dpage/pgadmin4
+    restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
       PGADMIN_DEFAULT_PASSWORD: "PgAdmin2019!"
