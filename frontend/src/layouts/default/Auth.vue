@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <Alert />
+
     <app-bar />
     <v-layout>
       <v-navigation-drawer v-model="drawer" elevation="4" :rail="rail" @click="rail = false"
@@ -74,6 +76,7 @@
 import { ref } from 'vue'
 import { useLoginStore } from '../../store/login';
 import { useRouter } from 'vue-router';
+import Alert from '@/components/Alert.vue';
 
 const drawer = ref(true)
 const rail = ref(false)

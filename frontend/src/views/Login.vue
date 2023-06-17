@@ -1,5 +1,6 @@
 <template>
   <v-responsive class="align-center text-center fill-height bg-blue-grey-darken-2">
+
     <v-card variant="tonal" class="mx-auto px-6 py-8 rounded" max-width="500">
       <v-form v-model="form" @submit.prevent="onSubmit">
 
@@ -32,7 +33,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { useLoginStore } from "../store/login";
+import { useAppStore } from "../store/app";
 
+const storeApp = useAppStore();
 const router = useRouter()
 
 const form = ref(false)
@@ -50,11 +53,19 @@ async function onSubmit() {
     loading.value = true
 
     await store.login(email.value, password.value)
-
+    storeApp.alert = {
+      show: false,
+      text: '',
+      type: ''
+    }
 
     router.push('/')
   } catch (error) {
-    console.log(error)
+    storeApp.alert = {
+      show: true,
+      text: 'Your email or password is incorrect.Please try again',
+      type: 'error'
+    }
   } finally {
     loading.value = false
 
