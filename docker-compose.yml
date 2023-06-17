@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+  pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "PgAdmin2019!"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
+
+  backend:
+    container_name: backend
+    restart: always
+    depends_on:
+      - postgres
+    build:
+      context: ./backend/.
+      target: dependencies
+    ports:
+      - 3333:3333
+      - 9229:9229
+    env_file:
+      - ./backend/.env
+    environment:
+      - PG_HOST=postgres
+    volumes:
+      - ./backend:/home/node/app
+    command: dumb-init node ace serve --watch --node-args="--inspect=0.0.0.0"
+  frontend:
+    container_name: frontend
+    restart: always
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - '3000:3000'
+
+volumes:
+  postgres_volume:
+  redis_volume:
