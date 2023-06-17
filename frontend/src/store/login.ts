@@ -5,7 +5,7 @@ import { defineStore } from 'pinia'
 export const useLoginStore = defineStore("login", {
   actions: {
     async login(email: string, password: string): Promise<any> {
-      const { data }: any = await axios.post('http://localhost:3333/api/login',
+      const { data }: any = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/login`,
         {
           email, password
         })

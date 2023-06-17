@@ -57,7 +57,7 @@ export const useBillStore = defineStore("bill", {
 
         this.loading = true
 
-        const { data: response }: any = await axios.get('http://localhost:3333/api/bill', {
+        const { data: response }: any = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/bill`, {
           params,
           headers: {
             Authorization: token
@@ -88,7 +88,7 @@ export const useBillStore = defineStore("bill", {
         this.loading = true
 
         if (this.item.id) {
-          await axios.put(`http://localhost:3333/api/bill/${this.item.id}`, this.item, {
+          await axios.put(`${import.meta.env.VITE_BACKEND_URL}/bill/${this.item.id}`, this.item, {
             headers: {
               Authorization: token
             }
@@ -99,7 +99,7 @@ export const useBillStore = defineStore("bill", {
           return
         }
 
-        await axios.post('http://localhost:3333/api/bill', this.item, {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/bill`, this.item, {
           headers: {
             Authorization: token
           }
@@ -124,7 +124,7 @@ export const useBillStore = defineStore("bill", {
       try {
         const token = localStorage.getItem('token');
 
-        await axios.delete(`http://localhost:3333/api/bill/${this.item.id}`, {
+        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/bill/${this.item.id}`, {
           headers: {
             Authorization: token
           }

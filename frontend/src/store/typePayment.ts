@@ -40,7 +40,7 @@ export const useTypePaymentStore = defineStore("typepayment", {
 
         this.loading = true
 
-        const { data: response }: any = await axios.get('http://localhost:3333/api/typePayment', {
+        const { data: response }: any = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/typePayment`, {
           params,
           headers: {
             Authorization: token
@@ -71,7 +71,7 @@ export const useTypePaymentStore = defineStore("typepayment", {
         this.loading = true
 
         if (this.item.id) {
-          await axios.put(`http://localhost:3333/api/typePayment/${this.item.id}`, this.item, {
+          await axios.put(`${import.meta.env.VITE_BACKEND_URL}/typePayment/${this.item.id}`, this.item, {
             headers: {
               Authorization: token
             }
@@ -82,7 +82,7 @@ export const useTypePaymentStore = defineStore("typepayment", {
           return
         }
 
-        await axios.post('http://localhost:3333/api/typePayment', this.item, {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/typePayment`, this.item, {
           headers: {
             Authorization: token
           }
@@ -106,7 +106,7 @@ export const useTypePaymentStore = defineStore("typepayment", {
       try {
         const token = localStorage.getItem('token');
 
-        await axios.delete(`http://localhost:3333/api/typePayment/${this.item.id}`, {
+        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/typePayment/${this.item.id}`, {
           headers: {
             Authorization: token
           }

@@ -50,7 +50,7 @@ export const useUserStore = defineStore("user", {
 
         this.loading = true
 
-        const { data: response }: any = await axios.get('http://localhost:3333/api/user', {
+        const { data: response }: any = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user`, {
           params,
           headers: {
             Authorization: token
@@ -83,7 +83,7 @@ export const useUserStore = defineStore("user", {
         if (this.item.id) {
           const items = Object.fromEntries(Object.entries(this.item).filter(([_, v]) => v != null));
 
-          await axios.put(`http://localhost:3333/api/user/${this.item.id}`, items, {
+          await axios.put(`${import.meta.env.VITE_BACKEND_URL}/user/${this.item.id}`, items, {
             headers: {
               Authorization: token
             }
@@ -94,7 +94,7 @@ export const useUserStore = defineStore("user", {
           return
         }
 
-        await axios.post('http://localhost:3333/api/user', this.item, {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user`, this.item, {
           headers: {
             Authorization: token
           }
@@ -118,7 +118,7 @@ export const useUserStore = defineStore("user", {
       try {
         const token = localStorage.getItem('token');
 
-        await axios.delete(`http://localhost:3333/api/user/${this.item.id}`, {
+        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/user/${this.item.id}`, {
           headers: {
             Authorization: token
           }
