@@ -43,7 +43,6 @@ export default class UsersController {
       throw new Error('User not found')
     }
 
-
     if (payload.password) {
       await auth.use('api').attempt(user.email, payload.oldPassword)
       delete payload.oldPassword

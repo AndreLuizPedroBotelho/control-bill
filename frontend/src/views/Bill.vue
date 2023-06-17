@@ -9,12 +9,13 @@
               style: 'currency', currency: 'BRL'
             })
           }}</td>
-          <td>
-            <v-chip label>
-              {{ item.columns.recurrent ?
-                'Yes' :
-                'No'
-              }}
+          <td class="d-flex justify-start">
+            <v-chip label v-if="item.columns.recurrent">
+              ✅
+            </v-chip>
+
+            <v-chip label v-else>
+              ❌
             </v-chip>
 
           </td>

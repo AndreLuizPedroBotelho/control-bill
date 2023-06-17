@@ -8,6 +8,7 @@ export const usePaymentStore = defineStore("payment", {
     total: 0,
     loading: false,
     lastPage: 1,
+    itemPerPage: 10,
     page: 1,
     headers: [
       {
@@ -93,6 +94,7 @@ export const usePaymentStore = defineStore("payment", {
 
         const { data: response }: any = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/payment`, {
           params: {
+            itemPerPage: this.itemPerPage,
             page: this.page,
             filters: this.filters
           },

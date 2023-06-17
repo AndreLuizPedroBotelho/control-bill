@@ -6,7 +6,7 @@ import { DateTime } from 'luxon'
 
 export default class PaymentsController {
   public async index({ response, request, auth }: HttpContextContract) {
-    const { page, filters } = request.qs()
+    const { page, itemPerPage, filters } = request.qs()
     const userId = auth.user!.id
 
     const data = await Payment.query()
@@ -38,7 +38,7 @@ export default class PaymentsController {
       .orderBy('month', 'desc')
       .orderBy(Database.raw('CASE WHEN paid THEN 1 ELSE 0 END '), 'asc')
 
-      .paginate(page || 1, 10)
+      .paginate(page || 1, itemPerPage || 10)
 
     response.status(200).json(data)
   }

@@ -14,7 +14,6 @@ export const useUserStore = defineStore("user", {
     }
   }),
   actions: {
-
     async save() {
       const token = localStorage.getItem('token');
 

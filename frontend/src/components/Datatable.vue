@@ -1,8 +1,8 @@
 <template>
   <v-responsive class="align-start text-center fill-height ma-10">
     <v-card>
-      <v-data-table-server fixed-header stick density="compact" theme="dark" v-model:items-per-page="itemsPerPage"
-        :headers="storeProp.headers" :items-length="storeProp.total" :items="storeProp.items" :loading="storeProp.loading"
+      <v-data-table-server fixed-header stick density="compact" theme="dark" :headers="storeProp.headers"
+        :items-length="storeProp.total" :items="storeProp.items" :loading="storeProp.loading"
         class="elevation-1 text-left" item-value="name">
 
         <template v-slot:top>
@@ -28,9 +28,19 @@
 
 
         <template v-slot:bottom>
-          <div class="pt-6">
-            <v-pagination v-model="page" @change="props.storeProp.get()" :length="storeProp.lastPage" :total-visible="7"
-              prev-icon="mdi-menu-left" next-icon="mdi-menu-right"></v-pagination>
+          <div class="pt-10 d-flex text-center align-start justify-end w-100">
+            <div style="width:150px" class="mt-2">
+              <v-select max-width="20" v-if="itemPerPage" variant="underlined" v-model="itemPerPage"
+                label="Items per page:" :items="itemsPerPage" density="compact" />
+            </div>
+
+            <div>
+              <v-pagination v-model="page" @change="props.storeProp.get()" :length="storeProp.lastPage" :total-visible="7"
+                prev-icon="mdi-menu-left" next-icon="mdi-menu-right"></v-pagination>
+            </div>
+
+
+
           </div>
         </template>
 
@@ -43,11 +53,11 @@
 import { ref, onMounted, watch } from 'vue';
 import { computed } from 'vue'
 
-const props = defineProps(['title', 'icon', 'storeProp', 'openModalSave', 'page', 'canCreate'])
+const props = defineProps(['title', 'icon', 'storeProp', 'openModalSave', 'page', 'itemPerPage', 'canCreate'])
 
-const itemsPerPage = ref(10)
+const itemsPerPage = ref([5, 10, 20])
 
-const emit = defineEmits(['update:page'])
+const emit = defineEmits(['update:itemPerPage', 'update:page'])
 
 const page = computed({
   get() {
@@ -58,7 +68,20 @@ const page = computed({
   }
 })
 
+const itemPerPage = computed({
+  get() {
+    return props.itemPerPage
+  },
+  set(value) {
+    emit('update:itemPerPage', value)
+  }
+})
+
 watch(page, async () => {
+  await props.storeProp.get()
+})
+
+watch(itemPerPage, async () => {
   await props.storeProp.get()
 })
 
