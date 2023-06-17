@@ -37,11 +37,13 @@
 
 import { ref } from 'vue';
 import { useUserStore } from "../store/user";
+import { useAppStore } from '../store/app';
 
 const form = ref(false)
 const loading = ref(false)
 
 const store = useUserStore();
+const storeApp = useAppStore();
 
 store.item = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : {};
 
@@ -62,6 +64,11 @@ async function save() {
   localStorage.setItem('user', JSON.stringify({ email: store.item.email, name: store.item.name, id: store.item.id }))
 
   loading.value = false
+  storeApp.alert = {
+    show: true,
+    text: 'User successfully saved',
+    type: 'success',
+  }
 
   return
 }
