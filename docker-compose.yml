@@ -6,6 +6,7 @@ services:
     image: postgres:13
     volumes:
       - postgres_volume:/var/lib/postgresql/data
+      - ./backend/init-db.sql:/docker-entrypoint-initdb.d/init.sql # will setup dev database adonis_app for us
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
