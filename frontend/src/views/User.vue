@@ -48,29 +48,40 @@ const storeApp = useAppStore();
 store.item = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : {};
 
 async function save() {
+  try {
+    if (!form.value) {
+      return
+    }
 
-  if (!form.value) {
+    if (store.item.password && store.item.password !== store.item.passwordConfirmation) {
+      alert("The Password not match with confirmation")
+    }
+
+
+    loading.value = true
+
+    await store.save()
+
+    localStorage.setItem('user', JSON.stringify({ email: store.item.email, name: store.item.name, id: store.item.id }))
+
+    loading.value = false
+    storeApp.alert = {
+      show: true,
+      text: 'User successfully saved',
+      type: 'success',
+    }
+
     return
+  } catch (error) {
+    loading.value = false
+    storeApp.alert = {
+      show: true,
+      text: 'Error',
+      type: 'error',
+    }
   }
 
-  if (store.item.password && store.item.password !== store.item.passwordConfirmation) {
-    alert("The Password not match with confirmation")
-  }
 
-
-  loading.value = true
-
-  await store.save()
-  localStorage.setItem('user', JSON.stringify({ email: store.item.email, name: store.item.name, id: store.item.id }))
-
-  loading.value = false
-  storeApp.alert = {
-    show: true,
-    text: 'User successfully saved',
-    type: 'success',
-  }
-
-  return
 }
 
 

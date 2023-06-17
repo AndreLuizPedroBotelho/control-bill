@@ -4,29 +4,6 @@ import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore("user", {
   state: () => ({
-    items: [],
-    total: 0,
-    loading: false,
-    headers: [
-      {
-        title: 'Name',
-        align: 'start',
-        sortable: true,
-        key: 'name',
-      },
-      {
-        title: 'Email',
-        align: 'start',
-        sortable: true,
-        key: 'email',
-      },
-      {
-        title: 'Actions',
-        align: 'center',
-        key: 'actions',
-        sortable: false
-      },
-    ],
     item: {
       id: null,
       name: '',
@@ -36,82 +13,28 @@ export const useUserStore = defineStore("user", {
       oldPassword: ''
     }
   }),
-  getters: {
-    getUsers(state) {
-      return state.items
-    }
-  },
   actions: {
-    async get(items: any = null) {
-      try {
-        const token = localStorage.getItem('token');
-
-        const params = items ? { ...items } : {}
-
-        this.loading = true
-
-        const { data: response }: any = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user`, {
-          params,
-          headers: {
-            Authorization: token
-          }
-        })
-
-        this.loading = false
-
-        this.items = response.data
-        this.total = response.meta.total
-
-        return {
-          items: this.items,
-          total: this.total
-        }
-      }
-      catch (error) {
-        this.loading = false
-
-        alert(error)
-        console.log(error)
-      }
-    },
 
     async save() {
-      try {
-        const token = localStorage.getItem('token');
-        this.loading = true
+      const token = localStorage.getItem('token');
 
-        if (this.item.id) {
-          const items = Object.fromEntries(Object.entries(this.item).filter(([_, v]) => v != null));
+      if (this.item.id) {
+        const items = Object.fromEntries(Object.entries(this.item).filter(([_, v]) => v != null));
 
-          await axios.put(`${import.meta.env.VITE_BACKEND_URL}/user/${this.item.id}`, items, {
-            headers: {
-              Authorization: token
-            }
-          })
-          this.loading = false
-          this.get()
-
-          return
-        }
-
-        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user`, this.item, {
+        await axios.put(`${import.meta.env.VITE_BACKEND_URL}/user/${this.item.id}`, items, {
           headers: {
             Authorization: token
           }
         })
-
-        this.loading = false
-        this.get()
-
         return
-
       }
-      catch (error) {
-        this.loading = false
 
-        alert(error)
-        console.log(error)
-      }
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user`, this.item, {
+        headers: {
+          Authorization: token
+        }
+      })
+      return
     },
 
     async remove() {
@@ -124,7 +47,6 @@ export const useUserStore = defineStore("user", {
           }
         })
 
-        this.get()
       }
       catch (error) {
         alert(error)
