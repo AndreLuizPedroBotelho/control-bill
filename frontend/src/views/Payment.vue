@@ -1,41 +1,49 @@
 <template>
   <v-responsive class="align-center text-left ml-2 mt-3">
-    <Datatable :canCreate="true" v-model:page="store.page" :storeProp="store" :openModalSave="openModalSave"
-      title="Payment" icon="mdi-cash-clock">
+    <Datatable :canCreate="true" v-model:page="store.page" v-model:itemPerPage="store.itemPerPage" :storeProp="store"
+      :openModalSave="openModalSave" title="Payment" icon="mdi-cash-clock">
       <template v-slot:filters>
-        <v-row class="mx-1">
-          <v-col cols="10">
-            <v-text-field label="Name" v-model="store.filters.name" v-on:keyup.enter="store.get()"
-              @click:clear="store.get()" clearable></v-text-field>
-          </v-col>
+        <v-expansion-panels class="mx-1 mb-10" variant="inset">
+          <v-expansion-panel>
+            <v-expansion-panel-title>Filters</v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-row>
+                <v-col cols="10">
+                  <v-text-field label="Name" v-model="store.filters.name" v-on:keyup.enter="store.get()"
+                    @click:clear="store.get()" clearable></v-text-field>
+                </v-col>
 
-          <v-col>
-            <v-select label="Paid" v-model="store.filters.paid" :items="paids" clearable
-              @update:modelValue="store.get()"></v-select>
-          </v-col>
-        </v-row>
+                <v-col>
+                  <v-select label="Paid" v-model="store.filters.paid" :items="paids" clearable
+                    @update:modelValue="store.get()"></v-select>
+                </v-col>
+              </v-row>
 
-        <v-row class="mx-1">
-          <v-col>
-            <v-select label="Month" v-model="store.filters.month" :items="months" @update:modelValue="store.get()"
-              clearable />
-          </v-col>
-          <v-col>
-            <v-text-field label=" Year*" v-model="store.filters.year" v-on:keyup.enter="store.get()"
-              @click:clear="store.get()" clearable />
-          </v-col>
-          <v-col>
-            <v-select label="Type of Payment" v-model="store.filters.typePaymentId" item-title="name" item-value="id"
-              :items="typePayments" clearable @update:modelValue="store.get()" />
-          </v-col>
+              <v-row>
+                <v-col>
+                  <v-select label="Month" v-model="store.filters.month" :items="months" @update:modelValue="store.get()"
+                    clearable />
+                </v-col>
+                <v-col>
+                  <v-text-field label=" Year*" v-model="store.filters.year" v-on:keyup.enter="store.get()"
+                    @click:clear="store.get()" clearable />
+                </v-col>
+                <v-col>
+                  <v-select label="Type of Payment" v-model="store.filters.typePaymentId" item-title="name"
+                    item-value="id" :items="typePayments" clearable @update:modelValue="store.get()" />
+                </v-col>
 
-          <v-col>
-            <v-select label="Bill" v-model="store.filters.billId" item-title="name" item-value="id" :items="bills"
-              clearable @update:modelValue="store.get()" />
-          </v-col>
+                <v-col>
+                  <v-select label="Bill" v-model="store.filters.billId" item-title="name" item-value="id" :items="bills"
+                    clearable @update:modelValue="store.get()" />
+                </v-col>
 
-        </v-row>
+              </v-row>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
 
+        <v-divider></v-divider>
       </template>
 
       <template v-slot="{ item }">
@@ -234,11 +242,17 @@ function required(v: any) {
 }
 
 onMounted(async () => {
-  const { items: itemsTypePayment }: any = await storeTypePayment.get()
-  const { items: itemsBill }: any = await storeBill.get()
+  if (!typePayments.value) {
+    const { items: itemsTypePayment }: any = await storeTypePayment.get()
+    typePayments.value = itemsTypePayment
+  }
 
-  typePayments.value = itemsTypePayment
-  bills.value = itemsBill
+  if (!bills.value) {
+    const { items: itemsBill }: any = await storeBill.get()
+    bills.value = itemsBill
+  }
+
+
 })
 
 
