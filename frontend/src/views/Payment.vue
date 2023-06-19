@@ -242,15 +242,11 @@ function required(v: any) {
 }
 
 onMounted(async () => {
-  if (!typePayments.value) {
-    const { items: itemsTypePayment }: any = await storeTypePayment.get()
-    typePayments.value = itemsTypePayment
-  }
+  const { items: itemsTypePayment }: any = await storeTypePayment.get()
+  typePayments.value = itemsTypePayment
 
-  if (!bills.value) {
-    const { items: itemsBill }: any = await storeBill.get()
-    bills.value = itemsBill
-  }
+  const { items: itemsBill }: any = await storeBill.get()
+  bills.value = itemsBill
 
 
 })
